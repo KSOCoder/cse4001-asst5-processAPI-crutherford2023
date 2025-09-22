@@ -52,7 +52,34 @@ Use the Linux in your CSE4001 container. If you are using macOS, you may use the
 
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[])
+{
+    int x = 1;
+    printf("hello world (pid:%d)\n", (int) getpid());
+
+    int rc = fork();
+    if (rc < 0) {
+
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+
+    } else if (rc == 0) {
+        x = 5;
+        printf("hello, I am child (pid:%d)\n", (int) getpid());
+
+    } else {
+        x = 10;
+        printf("hello, I am parent of %d (pid:%d)\n",
+	       rc, (int) getpid());
+    }
+
+    return 0;
+    
+}
 ```
 
 
