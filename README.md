@@ -16,25 +16,23 @@ Use the Linux in your CSE4001 container. If you are using macOS, you may use the
 
 ### **Steps to Complete the Assignment**
 
-1. **Accept the GitHub Classroom Invitation**
-    [GitHub Link](https://classroom.github.com/a/FZh4BrQG)
-2. **Set up your Repository**
+1. **Set up your Repository**
    - Clone the assignment repository.
-3. **Study the Reference Materials**
+2. **Study the Reference Materials**
    - Read **Chapter 5**.
    - Download and explore the sample programs from the textbook repository:
       [OSTEP CPU API Code](https://github.com/remzi-arpacidusseau/ostep-code/tree/master/cpu-api).
-4. **Write Your Programs**
+3. **Write Your Programs**
    - Adapt the provided example code to answer the assignment questions.
    - Each program should be clear, well-commented, and compile/run correctly.
    - Add your solution source code to the repository.
 
-5. **Prepare Your Report**
+4. **Prepare Your Report**
    - Answer the questions in the README.md file. You must edit the README.md file and not create another file with the answers. 
    - For each question:
      - Include your **code**.
      - Provide your **answer/explanation**.
-6. **Submit Your Work via GitHub**
+5. **Submit Your Work via GitHub**
    - Push both your **program code** to your assignment repository.
    - This push will serve as your submission.
    - Make sure all files, answers, and screenshots are uploaded and rendered properly.
