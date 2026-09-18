@@ -3,7 +3,7 @@ Practicing with fork, exec, wait.
 
 ### Overview
 
-In this assignment, you will practice using the Process API to create processes and run programs under Linux. The goal is to gain hands-on experience with system calls related to process management. Specifically, you will practice using the unix process API functions 'fork()', 'exec()', 'wait()', and 'exit()'. 
+In this assignment, you will practice using the Process API to create processes and run programs under Linux. The goal is to gain hands-on experience with system calls related to process management. Specifically, you will practice using the unix process API functions `fork()`, `exec()`, `wait()`, and `exit()`. 
 
 ⚠️ Note: This is not an OS/161 assignment. You will complete it directly on Linux. 
 
