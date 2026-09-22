@@ -83,13 +83,81 @@ main(int argc, char *argv[])
 2. Write a program that opens a file (with the `open()` system call) and then calls `fork()` to create a new process. Can both the child and parent access the file descriptor returned by `open()`? What happens when they are writing to the file concurrently, i.e., at the same time?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <assert.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+// Both the child and parent can open and write to the same file concurrently if it's accessed before the fork. If the file     is opened after the fork, they will open the same file, but different instances.
+
+int
+main(int argc, char *argv[])
+{
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child (new process)
+        int fd = open("./Q2.output", O_CREAT | O_WRONLY | O_TRUNC, S_IR>
+        printf("Child has opened the file\n");
+        if (fd < 0) {
+           fprintf(stderr, "open failed\n");
+           exit(1);
+        }
+
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+
+        char *myargs[3];
+        myargs[0] = strdup("wc");
+        myargs[1] = strdup("Q2.c");
+        myargs[2] = NULL;
+        execvp(myargs[0], myargs);
+    } else {
+        // parent goes down this path (original process)
+        int wc = wait(NULL);
+        printf("Parent has opened the file\n");
+        assert(wc >= 0);
+    }
+    return 0;
+}
+  
 ```
 
 3. Write another program using `fork()`.The child process should print “hello”; the parent process should print “goodbye”. You should try to ensure that the child process always prints first; can you do this without calling `wait()` in the parent?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+// Sleep works similiar to wait, but might not guarantee child first
+
+int
+main(int argc, char *argv[])
+{
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child (new process)
+        printf("Hello\n");
+    } else {
+        // parent goes down this path (original process)
+        sleep(1);
+        printf("Goodbye\n");
+    }
+    return 0;
+}  
 ```
 
 
