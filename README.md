@@ -307,6 +307,33 @@ main(int argc, char *argv[])
 7. Write a program that creates a child process, and then in the child closes standard output (`STDOUT FILENO`). What happens if the child calls `printf()` to print some output after closing the descriptor?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+// After closing the descriptor in the child, the child will still run the print command, but won't print to the console.
+
+int
+main(int argc, char *argv[])
+{
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child (new process)
+        close(STDOUT_FILENO);
+        int x = printf("hello, I am child (pid:%d)\n", (int) getpid());
+        printf("stderr says: printf returned %d\n", x);
+    } else {
+        // parent goes down this path (original process)
+        int wc = waitpid(rc, NULL, 0);
+        printf("hello, I am parent of %d (pid:%d)\n",
+               rc, (int) getpid());
+    }
+    return 0;
+}  
 ```
 
