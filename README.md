@@ -50,7 +50,33 @@ Use the Linux in your CSE4001 container. If you are using macOS, you may use the
 
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+// The value of variable x stays the same between the parent and child, while a new variable y changed in the child process changes to a new value.
+
+int
+main(int argc, char *argv[])
+{
+    int x = 100;
+    int y = x;
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child (new process)
+        y = 101;
+        printf("Child: x = %d ; y = %d\n", (int) x, (int) y);
+    } else {
+        // parent goes down this path (original process)
+        y = 102;
+        printf("Parent: x = %d ; y = %d\n", (int) x, (int) y);
+    }
+    return 0;
+}
 ```
 
 
