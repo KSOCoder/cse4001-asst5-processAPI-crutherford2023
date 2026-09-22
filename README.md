@@ -164,7 +164,76 @@ main(int argc, char *argv[])
 4. Write a program that calls `fork()` and then calls some form of `exec()` to run the program `/bin/ls`. See if you can try all of the variants of `exec()`, including (on Linux) `execl()`, `execle()`, `execlp()`, `execv()`, `execvp()`, and `execvpe()`. Why do you think there are so many variants of the same basic call?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#define _GNU_SOURCE
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+void run_variant(const char *label, void (*exec_func)(void)) {
+   printf("\n=== %s ===\n", label);
+   fflush(stdout);
+
+   int rc = fork();
+   if (rc < 0) {
+      fprintf(stderr, "fork failed\n");
+      exit(1);
+   } else if (rc == 0) {
+      exec_func();
+      fprintf(stderr, "exec failed for %s\n", label);
+      exit(1);
+   } else {
+      waitpid(rc, NULL, 0);
+   }
+}
+
+// Pass full path + args individually to avoid path search
+void variant_execl(void) {
+   execl("/bin/ls", "ls", "-1", NULL);
+}
+
+// Same as execl but allows passing of a custom environment
+void variant_execle(void) {
+   char *myenv[] = { "MY_VAR=hello", NULL };
+   execle("/bin/ls", "ls", "-1", NULL, myenv);
+}
+
+// Same as execl but searches PATH for program name
+void variant_execlp(void) {
+   execlp("ls", "ls", "-1", NULL);
+}
+
+// args pass as an array in vector form
+void variant_execv(void) {
+   char *myargs[] = { "ls", "-1", NULL };
+   execv("/bin/ls", myargs);
+}
+
+// same as execv but includes PATH search
+void variant_execvp(void) {
+   char *myargs[] = { "ls", "-1", NULL };
+   execvp("ls", myargs);
+}
+
+// same as execvp but includes custom environment support (and GNU exte>
+void variant_execvpe(void) {
+   char *myargs[] = { "ls", "-1", NULL };
+   char *myenv[] = { "MY_VAR=hello", NULL };
+   execvpe("ls", myargs, myenv);
+}
+
+int main(void) {
+   run_variant("execl", variant_execl);
+   run_variant("execle", variant_execle);
+   run_variant("execlp", variant_execlp);
+   run_variant("execv", variant_execv);
+   run_variant("execvp", variant_execvp);
+   run_variant("execvpe", variant_execvpe);
+
+   return 0;
+}
 ```
 
 5. Now write a program that uses `wait()` to wait for the child process to finish in the parent. What does `wait()` return? What happens if you use `wait()` in the child?
