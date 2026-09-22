@@ -273,7 +273,35 @@ main(int argc, char *argv[])
 6. Write a slight modification of the previous program, this time using `waitpid()` instead of `wait()`. When would `waitpid()` be useful?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+// waitpid() is useful instead of wait() when a process is waiting for 1 (individual/group of) child process to finish without other child processes.
+
+int
+main(int argc, char *argv[])
+{
+    printf("hello world (pid:%d)\n", (int) getpid());
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child (new process)
+        printf("hello, I am child (pid:%d)\n", (int) getpid());
+        int wc = waitpid(-1, NULL, 0);
+        printf("child's wait returned: %d\n", wc);
+    } else {
+        // parent goes down this path (original process)
+        int wc = waitpid(rc, NULL, 0);
+        printf("hello, I am parent of %d (pid:%d)\n",
+               wc, (int) getpid());
+    }
+    return 0;
+}  
 ```
 
 7. Write a program that creates a child process, and then in the child closes standard output (`STDOUT FILENO`). What happens if the child calls `printf()` to print some output after closing the descriptor?
